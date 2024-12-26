@@ -216,7 +216,48 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js">
   </script>
   <script src="js/custom.js"></script>
-
+  <script>
+    // Handle form submission
+    document.getElementById('predictionForm').addEventListener('submit', function(event) {
+      event.preventDefault(); // Prevent the default form submission behavior
+  
+      // Get input values
+      const annualIncome = document.getElementById('annual_income').value;
+      const creditScore = document.getElementById('credit_score').value;
+      const currentDebt = document.getElementById('current_debt').value;
+      const loanAmount = document.getElementById('loan_amount').value;
+  
+      // Prepare data for API
+      const inputData = [
+        {
+          annual_income: parseFloat(annualIncome),
+          credit_score: parseFloat(creditScore),
+          current_debt: parseFloat(currentDebt),
+          loan_amount: parseFloat(loanAmount),
+        }
+      ];
+  
+      // Send data to the backend
+      fetch('http://127.0.0.1:5000/predict', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(inputData),
+      })
+      .then(response => response.json())
+      .then(data => {
+        // Display result in the result container
+        const resultContainer = document.getElementById('result');
+        resultContainer.textContent = JSON.stringify(data, null, 2);
+      })
+      .catch(error => {
+        console.error('Error:', error);
+        const resultContainer = document.getElementById('result');
+        resultContainer.textContent = 'Error: Unable to connect to the API.';
+      });
+    });
+  </script>
 
 </body>
 
