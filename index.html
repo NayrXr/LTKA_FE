@@ -227,37 +227,37 @@
       const currentDebt = document.getElementById('current_debt').value;
       const loanAmount = document.getElementById('loan_amount').value;
   
-      // Prepare data for API
-      const inputData = [
-        {
-          annual_income: parseFloat(annualIncome),
-          credit_score: parseFloat(creditScore),
-          current_debt: parseFloat(currentDebt),
-          loan_amount: parseFloat(loanAmount),
-        }
-      ];
+      // Prepare query parameters
+      const queryParams = new URLSearchParams({
+        annual_income: annualIncome,
+        credit_score: creditScore,
+        current_debt: currentDebt,
+        loan_amount: loanAmount,
+      }).toString();
   
       // Send data to the backend
-      fetch('http://127.0.0.1:5000/predict', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(inputData),
+      fetch(`https://loan-approval-1091623875181.asia-southeast2.run.app/predict?${queryParams}`, {
+        method: 'GET', // GET request to match the Flask route
       })
-      .then(response => response.json())
-      .then(data => {
-        // Display result in the result container
-        const resultContainer = document.getElementById('result');
-        resultContainer.textContent = JSON.stringify(data, null, 2);
-      })
-      .catch(error => {
-        console.error('Error:', error);
-        const resultContainer = document.getElementById('result');
-        resultContainer.textContent = 'Error: Unable to connect to the API.';
-      });
+        .then(response => {
+          if (!response.ok) {
+            throw new Error('Network response was not ok');
+          }
+          return response.json();
+        })
+        .then(data => {
+          // Display the result in the result container
+          const resultContainer = document.getElementById('result');
+          resultContainer.textContent = JSON.stringify(data, null, 2);
+        })
+        .catch(error => {
+          console.error('Error:', error);
+          const resultContainer = document.getElementById('result');
+          resultContainer.textContent = 'Error: Unable to connect to the API.';
+        });
     });
   </script>
+  
 
 </body>
 
