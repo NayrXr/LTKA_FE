@@ -252,18 +252,9 @@
   
           // Format the result for display
           const resultContainer = document.getElementById('result');
-          resultContainer.innerHTML = `
-            <p><strong>Input:</strong></p>
-            <ul>
-              <li>Annual Income: ${input.annual_income}</li>
-              <li>Credit Score: ${input.credit_score}</li>
-              <li>Current Debt: ${input.current_debt}</li>
-              <li>Loan Amount: ${input.loan_amount}</li>
-            </ul>
-            <p><strong>Prediction:</strong> ${prediction}</p>
-            <p><strong>Probability:</strong> ${(probability * 100).toFixed(2)}%</p>
-          `;
-        })
+        resultContainer.textContent = `Prediction: ${prediction}`;
+        
+      })
         .catch(error => {
           console.error('Error:', error);
           const resultContainer = document.getElementById('result');
