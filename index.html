@@ -235,20 +235,34 @@
         loan_amount: loanAmount,
       }).toString();
   
-      // Send data to the backend
-      fetch(`https://loan-approval-1091623875181.asia-southeast2.run.app/predict?${queryParams}`, {
-        method: 'GET', // GET request to match the Flask route
-      })
+      // Build the complete API URL
+      const apiUrl = `https://loan-approval-1091623875181.asia-southeast2.run.app/predict?${queryParams}`;
+  
+      // Send GET request to the backend
+      fetch(apiUrl, { method: 'GET', timeout: 10000 })
         .then(response => {
           if (!response.ok) {
             throw new Error('Network response was not ok');
           }
-          return response.json();
+          return response.json(); // Parse JSON response
         })
         .then(data => {
-          // Display the result in the result container
+          // Extract details from the response
+          const { input, prediction, probability } = data;
+  
+          // Format the result for display
           const resultContainer = document.getElementById('result');
-          resultContainer.textContent = JSON.stringify(data, null, 2);
+          resultContainer.innerHTML = `
+            <p><strong>Input:</strong></p>
+            <ul>
+              <li>Annual Income: ${input.annual_income}</li>
+              <li>Credit Score: ${input.credit_score}</li>
+              <li>Current Debt: ${input.current_debt}</li>
+              <li>Loan Amount: ${input.loan_amount}</li>
+            </ul>
+            <p><strong>Prediction:</strong> ${prediction}</p>
+            <p><strong>Probability:</strong> ${(probability * 100).toFixed(2)}%</p>
+          `;
         })
         .catch(error => {
           console.error('Error:', error);
@@ -257,6 +271,9 @@
         });
     });
   </script>
+  
+  
+  
   
 
 </body>
